@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -59,9 +61,9 @@ public class Subscription implements Comparable<Subscription> {
 	@Enumerated(EnumType.STRING)
 	private PLAN_AUTORENEWAL autoRenewal;
 
-	@NotBlank
-	@Size(max = 10, min = 6)
-	private String regId;
+	@ManyToOne
+	@JoinColumn(name = "registerId", nullable = false)
+	private Register register;
 
 	@Override
 	public int compareTo(Subscription obj) {

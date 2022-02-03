@@ -5,10 +5,11 @@ import java.util.Optional;
 
 import com.zee.zee5app.dto.Subscription;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 
 public interface SubscriptionService {
 
-	public String addSubscription(Subscription subscription);
+	public String addSubscription(Subscription subscription) throws RecordExistsException;
 
 	public String updateSubscriptionById(String id, Subscription subscription) throws IdNotFoundException;
 

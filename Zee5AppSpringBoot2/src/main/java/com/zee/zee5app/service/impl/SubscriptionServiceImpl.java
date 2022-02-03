@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.zee.zee5app.dto.Subscription;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 import com.zee.zee5app.repository.SubscriptionRepository;
 import com.zee.zee5app.service.SubscriptionService;
 
@@ -18,7 +19,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private SubscriptionRepository subscriptionRepository;
 
 	@Override
-	public String addSubscription(Subscription subscription) {
+	public String addSubscription(Subscription subscription) throws RecordExistsException {
+		if(this.subscriptionRepository.existsById(subscription.getId()))
+			throw new RecordExistsException("Subscription Id exists");
 		return (this.subscriptionRepository.save(subscription) != null) ? "success" : "fail";
 	}
 

@@ -1,7 +1,10 @@
 package com.zee.zee5app.dto;
 
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
@@ -30,9 +33,6 @@ public class Episode {
 	@Size(min = 6, max = 10)
 	private String epiId;
 
-	@Size(min = 6, max = 10)
-	private String serialId;
-
 	@NotBlank
 	private String episodename;
 
@@ -46,5 +46,9 @@ public class Episode {
 
 	@URL
 	private String trailer;
+
+	@ManyToOne
+	@JoinColumn(name = "seriesId", nullable = false, foreignKey = @ForeignKey(name = "fk_episerId"))
+	private Series series;
 
 }

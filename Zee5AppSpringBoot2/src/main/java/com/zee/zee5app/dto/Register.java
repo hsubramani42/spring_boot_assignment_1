@@ -1,10 +1,19 @@
 package com.zee.zee5app.dto;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -51,6 +60,16 @@ public class Register implements Comparable<Register> {
 	@NotNull
 	@Range(min = 1000000000, max = 9999999999L)
 	private BigDecimal contactNumber;
+
+	@ManyToMany
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "regId", foreignKey = @ForeignKey(name = "fk_regid")), inverseJoinColumns = @JoinColumn(name = "roleId", foreignKey = @ForeignKey(name = "fk_roleid")))
+	private Set<Role> roles = new HashSet<>();
+
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL)
+	private Set<Subscription> subscriptions = new HashSet<>();
+
+	@OneToOne(mappedBy = "register", cascade = CascadeType.ALL)
+	private Login login;
 
 	@Override
 	public int compareTo(Register obj) {

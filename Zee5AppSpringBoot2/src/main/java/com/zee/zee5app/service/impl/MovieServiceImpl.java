@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.zee.zee5app.dto.Movie;
 import com.zee.zee5app.exception.IdNotFoundException;
 import com.zee.zee5app.exception.NameNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 import com.zee.zee5app.repository.MovieRepository;
 import com.zee.zee5app.service.MovieService;
 
@@ -18,7 +19,9 @@ public class MovieServiceImpl implements MovieService {
 	private MovieRepository movieRepository;
 
 	@Override
-	public String addMovie(Movie movie) {
+	public String addMovie(Movie movie) throws RecordExistsException {
+		if (this.movieRepository.existsByTrailer(movie.getTrailer()))
+			throw new RecordExistsException("Trailer exist");
 		return (this.movieRepository.save(movie) != null) ? "success" : "fail";
 	}
 
@@ -58,7 +61,7 @@ public class MovieServiceImpl implements MovieService {
 
 	@Override
 	public List<Movie> getMovieByName(String name) throws NameNotFoundException {
-		List<Movie> movies = this.movieRepository.findAllMoviesByName(name);
+		List<Movie> movies = this.movieRepository.findAllByName(name);
 		if (movies.size() == 0)
 			throw new NameNotFoundException("Invalid Name");
 		return movies;

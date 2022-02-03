@@ -6,9 +6,10 @@ import java.util.Optional;
 import com.zee.zee5app.dto.Movie;
 import com.zee.zee5app.exception.IdNotFoundException;
 import com.zee.zee5app.exception.NameNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 
 public interface MovieService {
-	public String addMovie(Movie movie);
+	public String addMovie(Movie movie) throws RecordExistsException;
 
 	public String updateMovieById(String id, Movie movie) throws IdNotFoundException;
 

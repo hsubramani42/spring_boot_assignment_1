@@ -5,9 +5,10 @@ import java.util.Optional;
 
 import com.zee.zee5app.dto.Series;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 
 public interface SeriesService {
-	public String addSeries(Series series);
+	public String addSeries(Series series) throws RecordExistsException;
 
 	public String updateSeriesById(String id, Series series) throws IdNotFoundException;
 

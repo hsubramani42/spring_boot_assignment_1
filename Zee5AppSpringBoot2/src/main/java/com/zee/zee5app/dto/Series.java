@@ -1,11 +1,15 @@
 package com.zee.zee5app.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -64,9 +68,8 @@ public class Series implements Comparable<Series> {
 	@Enumerated(EnumType.STRING)
 	private LANGUAGE language;
 
-	@NotNull
-	@Min(value = 1)
-	private int noOfEpisodes;
+	@OneToMany(mappedBy = "series", cascade = CascadeType.ALL)
+	private Set<Episode> episodes = new HashSet<>();
 
 	@Override
 	public int compareTo(Series obj) {

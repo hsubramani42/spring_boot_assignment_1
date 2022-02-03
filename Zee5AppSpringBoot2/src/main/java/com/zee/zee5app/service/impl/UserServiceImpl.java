@@ -5,20 +5,40 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.zee.zee5app.dto.Login;
 import com.zee.zee5app.dto.Register;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 import com.zee.zee5app.repository.UserRepository;
+import com.zee.zee5app.service.LoginService;
 import com.zee.zee5app.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
-	private UserRepository userRepository = null;
+	private UserRepository userRepository;
+
+	@Autowired
+	private LoginService loginService;
 
 	@Override
-	public String addUser(Register register) {
-		return (this.userRepository.save(register) != null) ? "success" : "fail";
+	@Transactional(rollbackFor = RecordExistsException.class)
+	public String addUser(Register register) throws RecordExistsException {
+		if (this.userRepository.existsByEmailOrContactNumber(register.getEmail(), register.getContactNumber()))
+			throw new RecordExistsException("Email Id or Contact Numer exists!");
+		Register savedRegister = this.userRepository.save(register);
+		if (savedRegister == null)
+			return "fail";
+
+		Login login = new Login(savedRegister.getEmail(), savedRegister.getPassword(), savedRegister);
+
+		String status = loginService.addCredentials(login);
+		if (!status.equals("success"))
+			throw new RecordExistsException(status);
+
+		return "success";
 	}
 
 	@Override

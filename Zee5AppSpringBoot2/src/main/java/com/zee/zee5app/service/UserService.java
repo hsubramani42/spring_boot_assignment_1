@@ -5,9 +5,10 @@ import java.util.Optional;
 
 import com.zee.zee5app.dto.Register;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 
 public interface UserService {
-	public String addUser(Register register);
+	public String addUser(Register register) throws RecordExistsException;
 
 	public Optional<Register> getUserById(String id) throws IdNotFoundException;
 

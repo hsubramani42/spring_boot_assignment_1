@@ -5,9 +5,10 @@ import java.util.Optional;
 
 import com.zee.zee5app.dto.Episode;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 
 public interface EpisodeService {
-	public String addEpisode(Episode episode);
+	public String addEpisode(Episode episode) throws RecordExistsException;
 
 	public String updateEpisodeById(String id, Episode episode) throws IdNotFoundException;
 

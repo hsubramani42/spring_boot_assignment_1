@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zee.zee5app.dto.Login;
-import com.zee.zee5app.dto.enums.ROLE;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 import com.zee.zee5app.repository.LoginRepository;
 import com.zee.zee5app.service.LoginService;
 
@@ -15,10 +15,12 @@ import com.zee.zee5app.service.LoginService;
 public class LoginServiceImpl implements LoginService {
 
 	@Autowired
-	private LoginRepository loginRepository = null;
+	private LoginRepository loginRepository;
 
 	@Override
-	public String addCredentials(Login login) {
+	public String addCredentials(Login login) throws RecordExistsException {
+		if (this.loginRepository.existsById(login.getUserName()))
+			throw new RecordExistsException("Email Id exists!");
 		return (this.loginRepository.save(login) != null) ? "success" : "fail";
 	}
 
@@ -39,14 +41,4 @@ public class LoginServiceImpl implements LoginService {
 		return (this.loginRepository.save(login.get()) != null) ? "success" : "fail";
 
 	}
-
-	@Override
-	public String changeRole(String userName, ROLE role) throws IdNotFoundException {
-		Optional<Login> login = this.loginRepository.findById(userName);
-		if (login.isEmpty())
-			throw new IdNotFoundException("Invalid Id");
-		login.get().setRole(role);
-		return (this.loginRepository.save(login.get()) != null) ? "success" : "fail";
-	}
-
 }

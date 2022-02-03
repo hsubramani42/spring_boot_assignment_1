@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.zee.zee5app.dto.Series;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 import com.zee.zee5app.repository.SeriesRepository;
 import com.zee.zee5app.service.SeriesService;
 
@@ -17,7 +18,9 @@ public class SeriesServiceImpl implements SeriesService {
 	private SeriesRepository seriesRepository;
 
 	@Override
-	public String addSeries(Series series) {
+	public String addSeries(Series series) throws RecordExistsException {
+		if (this.seriesRepository.existsById(series.getId()))
+			throw new RecordExistsException("Series Id exists!");
 		return (this.seriesRepository.save(series) != null) ? "success" : "fail";
 	}
 

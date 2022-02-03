@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.zee.zee5app.dto.Episode;
 import com.zee.zee5app.exception.IdNotFoundException;
+import com.zee.zee5app.exception.RecordExistsException;
 import com.zee.zee5app.repository.EpisodeRepository;
 import com.zee.zee5app.service.EpisodeService;
 
@@ -18,7 +19,9 @@ public class EpisodeServiceImpl implements EpisodeService {
 	private EpisodeRepository episodeRepository;
 
 	@Override
-	public String addEpisode(Episode episode) {
+	public String addEpisode(Episode episode) throws RecordExistsException {
+		if (this.episodeRepository.existsById(episode.getEpiId()))
+			throw new RecordExistsException("Episode Already Exists!");
 		return (this.episodeRepository.save(episode) != null) ? "success" : "fail";
 	}
 
